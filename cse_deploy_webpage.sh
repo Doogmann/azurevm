@@ -23,7 +23,7 @@ cat > /var/www/html/index.html <<'HTML'
 </head>
 <body>
   <canvas id="bg"></canvas>
-  <header>💻 Hectormoncler – IT-Tech Webinar</header>
+  <header>💻 Hectormoncler – IT-Tech </header>
   <main>
     <div class="card">
       <h2>📅 Event Info</h2>
