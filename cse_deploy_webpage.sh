@@ -41,50 +41,111 @@ HTML
 sudo tee "${WEB_ROOT}/index.html" >/dev/null <<'HTML'
 <!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Hectormoncler • Azure MySQL Contact App</title>
-<style>
-:root{--neon:#00f0ff;--bg:#0a0a0a;--text:#e5faff;--card:#0d1117;--accent:#1976d2}
-*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
-header{text-align:center;padding:48px 16px 24px}
-header h1{font-family:'Courier New',monospace;font-weight:700;letter-spacing:2px;font-size:clamp(28px,4.5vw,48px);color:var(--neon);text-shadow:0 0 10px var(--neon)}
-header p{opacity:.9;margin-top:8px}.wrap{max-width:1100px;margin:0 auto;padding:16px}
-.grid{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));margin-top:20px}
-.card{background:linear-gradient(180deg,rgba(0,240,255,.08),rgba(0,240,255,.02)),var(--card);border:1px solid rgba(0,240,255,.35);border-radius:14px;padding:22px;box-shadow:0 0 25px rgba(0,240,255,.15);transition:transform .2s,box-shadow .2s}
-.card:hover{transform:translateY(-4px);box-shadow:0 0 35px rgba(0,240,255,.35)}.card h2{font-family:'Courier New',monospace;color:var(--neon);margin-bottom:10px}
-.btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px}.btn{border:0;text-decoration:none;color:#fff;background:var(--accent);padding:10px 14px;border-radius:10px;font-weight:600}
-.btn.secondary{background:#0ea5e9}.btn.ghost{background:transparent;color:var(--neon);border:1px solid rgba(0,240,255,.5)}.btn:hover{filter:brightness(.95)}
-ul{margin-top:10px;line-height:1.75}footer{opacity:.7;text-align:center;margin:26px 0 40px}
-</style></head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hectormoncler – IT-Tech</title>
+  <style>
+    :root{--neon:#00f0ff;--bg:#0a0a0a;--card:#0d1117;--text:#cbefff}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Helvetica,Arial,sans-serif;min-height:100vh;overflow:hidden}
+    header{position:relative;z-index:2;text-align:center;padding:48px 16px 8px}
+    header h1{font-family:"Courier New",monospace;font-size:clamp(28px,5vw,48px);color:var(--neon);letter-spacing:2px;text-shadow:0 0 10px var(--neon)}
+    header p{opacity:.85;margin-top:8px}
+    .wrap{position:relative;z-index:2;max-width:1100px;margin:0 auto;padding:20px}
+    .grid{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));margin-top:22px}
+    .card{background:linear-gradient(180deg,rgba(0,240,255,.08),rgba(0,240,255,.02)),var(--card);
+          border:1px solid rgba(0,240,255,.35);border-radius:14px;padding:22px;
+          box-shadow:0 0 25px rgba(0,240,255,.15);transition:transform .2s,box-shadow .2s}
+    .card:hover{transform:translateY(-4px);box-shadow:0 0 35px rgba(0,240,255,.35)}
+    .card h2{font-family:"Courier New",monospace;color:var(--neon);margin-bottom:10px}
+    .pill{display:inline-block;padding:3px 10px;border:1px solid rgba(0,240,255,.35);border-radius:999px;margin-bottom:10px;opacity:.9}
+    ul{margin-top:8px;line-height:1.7}
+    .btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px}
+    .btn{display:inline-block;padding:10px 14px;border-radius:10px;font-weight:600;text-decoration:none;color:#001b20;background:var(--neon)}
+    .btn.ghost{background:transparent;color:var(--neon);border:1px solid rgba(0,240,255,.5)}
+    footer{position:relative;z-index:2;text-align:center;margin:26px 0 40px;opacity:.75}
+    canvas#bg{position:fixed;inset:0;z-index:1}
+    /* little form look */
+    .form input{width:100%;margin:.35rem 0;padding:.55rem;border-radius:8px;border:1px solid rgba(0,240,255,.25);background:#0b141a;color:var(--text)}
+    .form button{margin-top:.4rem}
+  </style>
+</head>
 <body>
-<header>
-  <h1>💻 Hectormoncler – IT-Tech</h1>
-  <p>LEMP on Azure • Reverse Proxy • Azure Database for MySQL Flexible Server</p>
-</header>
-<div class="wrap">
-  <div class="grid">
-    <section class="card">
-      <h2>📅 Event</h2>
-      <p>Topic: <b>The Future of IT</b> • Date: <b>Aug 25, 2025</b> • Time: <b>15:00 CET</b></p>
-      <div class="btns"><a class="btn ghost" href="/event/">Open Animated Event Page</a></div>
-    </section>
-    <section class="card">
-      <h2>📝 Azure MySQL Contact App</h2>
-      <p>Submit a message and view stored entries (MySQL via private VNet).</p>
-      <div class="btns">
-        <a class="btn" href="contact_form.html">Contact Form</a>
-        <a class="btn secondary" href="on_get_messages.php">View Messages</a>
-      </div>
-      <ul>
-        <li>Nginx + PHP-FPM on WebApp VM (port 5000)</li>
-        <li>Reverse Proxy routes <code>/</code>→5000 and <code>/event/</code>→8081</li>
-        <li>Azure MySQL Flexible Server (private access)</li>
-      </ul>
-    </section>
+  <canvas id="bg"></canvas>
+
+  <header>
+    <h1>💻 Hectormoncler – IT-Tech</h1>
+    <p>LEMP on Azure • Reverse Proxy • Azure Database for MySQL</p>
+  </header>
+
+  <div class="wrap">
+    <div class="grid">
+
+      <section class="card">
+        <span class="pill">📅 Event</span>
+        <h2>Event Info</h2>
+        <p>Topic: <b>The Future of IT</b></p>
+        <p>Date: <b>August 25, 2025</b></p>
+        <p>Time: <b>15:00 CET</b></p>
+        <div class="btns">
+          <a class="btn ghost" href="/event/">Open Animated Event Page</a>
+        </div>
+      </section>
+
+      <section class="card">
+        <span class="pill">📝 Contact App</span>
+        <h2>Azure MySQL Contact App</h2>
+        <p>Submit a message and view stored entries (MySQL via private VNet).</p>
+        <div class="btns">
+          <a class="btn" href="contact_form.html">Contact Form</a>
+          <a class="btn ghost" href="on_get_messages.php">View Messages</a>
+        </div>
+        <ul>
+          <li>Nginx + PHP-FPM on WebApp VM (port 5000)</li>
+          <li>Reverse Proxy: <code>/</code> → 5000, <code>/event/</code> → 8081</li>
+          <li>Azure MySQL Flexible Server (private access)</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <span class="pill">🧪 Status</span>
+        <h2>Health Check</h2>
+        <ul>
+          <li><a class="btn ghost" href="/health">Web health</a></li>
+          <li><a class="btn ghost" href="/event/">Event page</a></li>
+        </ul>
+        <div class="form" style="margin-top:10px">
+          <input placeholder="Your Name" />
+          <input placeholder="Your Email" type="email" />
+          <button class="btn">Join Now</button>
+        </div>
+      </section>
+
+    </div>
   </div>
-</div>
-<footer>© <script>document.write(new Date().getFullYear())</script> Hectormoncler • Azure LEMP Demo</footer>
-</body></html>
+
+  <footer>© <script>document.write(new Date().getFullYear())</script> Hectormoncler • Azure LEMP Demo</footer>
+
+  <script>
+  // lightweight moving dots + lines background
+  const c=document.getElementById('bg'),x=c.getContext('2d');let w,h,nodes=[];
+  function R(){w=c.width=innerWidth;h=c.height=innerHeight;
+    nodes=Array.from({length:60},()=>({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5),vy:(Math.random()-.5)}));
+  }
+  function D(){x.clearRect(0,0,w,h);x.fillStyle='#00f0ff';
+    nodes.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>w)p.vx*=-1;if(p.y<0||p.y>h)p.vy*=-1;x.beginPath();x.arc(p.x,p.y,1.8,0,6.28);x.fill();});
+    for(let i=0;i<nodes.length;i++)for(let j=i+1;j<nodes.length;j++){
+      let a=nodes[i],b=nodes[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.hypot(dx,dy); if(d<120){
+        x.strokeStyle=`rgba(0,240,255,${1-d/120})`; x.lineWidth=1; x.beginPath(); x.moveTo(a.x,a.y); x.lineTo(b.x,b.y); x.stroke();
+      }
+    }
+    requestAnimationFrame(D);
+  }
+  addEventListener('resize',R); R(); D();
+  </script>
+</body>
+</html>
 HTML
 
 # -------------------------------------------------------------------
