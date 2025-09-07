@@ -1,0 +1,539 @@
+<?php
+// Handle POST request for contact form submission
+require_once 'database_setup.php';
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $name = $_POST['name'] ?? '';
+    $email = $_POST['email'] ?? '';
+    $message = $_POST['message'] ?? '';
+
+    if (!empty($name) && !empty($email) && !empty($message)) {
+        try {
+            $stmt = $pdo->prepare("INSERT INTO contacts (name, email, message) VALUES (?, ?, ?)");
+            $stmt->execute([$name, $email, $message]);
+            $success = true;
+        } catch(PDOException $e) {
+            $error = "Error saving message: " . $e->getMessage();
+        }
+    } else {
+        $error = "All fields are required.";
+    }
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message Sent - Azure MySQL Contact App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📨 Message Status</h1>
+        </header>
+
+        <nav>
+            <a href="index.html" class="btn">Home</a>
+            <a href="contact_form.html" class="btn">Contact Form</a>
+            <a href="on_get_messages.php" class="btn">View Messages</a>
+        </nav>
+
+        <main>
+            <?php if (isset($success)): ?>
+                <div class="success-message">
+                    <h2>✅ Message Sent Successfully!</h2>
+                    <p>Thank you for your message. It has been saved to the Azure MySQL database.</p>
+                </div>
+            <?php elseif (isset($error)): ?>
+                <div class="error-message">
+                    <h2>❌ Error</h2>
+                    <p><?php echo htmlspecialchars($error); ?></p>
+                </div>
+            <?php endif; ?>
+
+            <div class="actions">
+                <a href="contact_form.html" class="btn">Send Another Message</a>
+                <a href="on_get_messages.php" class="btn">View All Messages</a>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
+
+/* Simple and clean styling for the contact app */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f4f4f4;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+    min-height: 100vh;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #eee;
+}
+
+header h1 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+header p {
+    color: #7f8c8d;
+    font-size: 1.1em;
+}
+
+nav {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 0 5px;
+    background-color: #3498db;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: #2980b9;
+}
+
+.btn.active {
+    background-color: #2c3e50;
+}
+
+.btn.submit-btn {
+    background-color: #27ae60;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.btn.submit-btn:hover {
+    background-color: #229954;
+}
+
+main {
+    margin-bottom: 30px;
+}
+
+.features {
+    background-color: #ecf0f1;
+    padding: 20px;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+.features h3 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.features ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.features li {
+    padding: 5px 0;
+    padding-left: 20px;
+    position: relative;
+}
+
+.features li:before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #27ae60;
+    font-weight: bold;
+}
+
+/* Form Styling */
+.contact-form {
+    background-color: #f8f9fa;
+    padding: 30px;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+}
+
+/* Message Styling */
+.success-message,
+.error-message,
+.info-message {
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.success-message {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.info-message {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+
+.actions {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Messages List Styling */
+.messages-count {
+    background-color: #e8f4fd;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.messages-list {
+    space-y: 20px;
+}
+
+.message-item {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.message-header h3 {
+    color: #2c3e50;
+    margin: 0;
+}
+
+.message-date {
+    color: #7f8c8d;
+    font-size: 0.9em;
+}
+
+.message-email {
+    color: #3498db;
+    margin-bottom: 10px;
+}
+
+.message-content {
+    color: #555;
+}
+
+.message-content p {
+    margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .container {
+        padding: 10px;
+    }
+
+    .message-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .message-date {
+        margin-top: 5px;
+    }
+
+    .btn {
+        padding: 8px 15px;
+        font-size: 14px;
+        margin: 2px;
+    }
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Form - Azure MySQL Contact App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>✉️ Contact Form</h1>
+        </header>
+
+        <nav>
+            <a href="index.html" class="btn">Home</a>
+            <a href="contact_form.html" class="btn active">Contact Form</a>
+            <a href="on_get_messages.php" class="btn">View Messages</a>
+        </nav>
+
+        <main>
+            <form action="on_post_contact.php" method="POST" class="contact-form">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Message:</label>
+                    <textarea id="message" name="message" rows="5" required></textarea>
+                </div>
+
+                <button type="submit" class="btn submit-btn">Send Message</button>
+            </form>
+        </main>
+    </div>
+</body>
+</html>
+
+<?php
+// Azure MySQL Database configuration
+// Replace with your actual Azure MySQL server details
+$host = getenv('MYSQL_HOST') ?: '[YOUR-MYSQL-SERVER-NAME].mysql.database.azure.com';
+$dbname = getenv('MYSQL_DATABASE') ?: 'contactforms';
+$username = getenv('MYSQL_USERNAME') ?: 'mysqladmin';
+$password = getenv('MYSQL_PASSWORD') ?: 'SecurePassword123!';
+
+try {
+    // Connect to Azure MySQL with SSL
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::MYSQL_ATTR_SSL_CA => '/etc/ssl/certs/ca-certificates.crt'
+    ]);
+
+    // Create table if not exists (database-first approach for learning)
+    $pdo->exec("CREATE TABLE IF NOT EXISTS contacts (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        email VARCHAR(100) NOT NULL,
+        message TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_created_at (created_at)
+    )");
+
+    echo "<!-- Database connection successful -->\n";
+
+} catch(PDOException $e) {
+    // Log error and show user-friendly message
+    error_log("Database connection failed: " . $e->getMessage());
+    die("Database connection failed. Please check configuration. Error: " . $e->getMessage());
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hectormoncler – IT-Tech</title>
+  <style>
+    :root { --neon:#00f0ff; --bg:#0a0a0a; --card:#0d1117; --text:#e7fbff; --glow:rgba(0,240,255,.55); }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:"Courier New",monospace;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+    header{padding:48px 16px 10px;text-align:center}
+    header h1{font-weight:800;letter-spacing:2px;font-size:clamp(28px,4.5vw,48px);color:var(--neon);text-shadow:0 0 10px var(--neon)}
+    .wrap{max-width:1100px;margin:0 auto;padding:18px}
+    .grid{display:grid;gap:24px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+    .card{background:linear-gradient(180deg,rgba(0,240,255,.08),rgba(0,240,255,.02)),var(--card);
+      border:1px solid var(--glow);border-radius:14px;padding:22px;box-shadow:0 0 25px rgba(0,240,255,.15);transition:.2s}
+    .card:hover{transform:translateY(-4px);box-shadow:0 0 35px rgba(0,240,255,.35)}
+    .card h2{color:var(--neon);margin-bottom:14px}
+    p{line-height:1.6}
+    .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+    .btn{padding:10px 14px;border-radius:10px;text-decoration:none;font-weight:700;color:#001820;background:var(--neon)}
+    .btn.ghost{background:transparent;color:var(--neon);border:1px solid var(--glow)}
+    footer{opacity:.7;text-align:center;margin:28px 0 40px}
+    /* subtle background points/lines */
+    canvas{position:fixed;inset:0;z-index:-1}
+    input,button{font-family:inherit}
+    form input{width:100%;padding:10px;border-radius:8px;border:1px solid var(--glow);background:#0b141a;color:var(--text)}
+    form button{margin-top:10px}
+  </style>
+</head>
+<body>
+  <canvas id="bg"></canvas>
+  <header><h1>��� Hectormoncler – IT-Tech</h1></header>
+
+  <div class="wrap">
+    <div class="grid">
+      <section class="card">
+        <h2>��� Event Info</h2>
+        <p><b>Topic:</b> The Future of IT</p>
+        <p><b>Date:</b> August 25, 2025 • <b>Time:</b> 15:00 CET</p>
+        <div class="btns">
+          <a class="btn ghost" href="/event/">Open animated /event page</a>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>��� Register</h2>
+        <!-- Forward visitors into your PHP app screens -->
+        <div class="btns">
+          <a class="btn" href="contact_form.html">Contact Form</a>
+          <a class="btn ghost" href="on_get_messages.php">View Messages</a>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <footer>© <script>document.write(new Date().getFullYear())</script> Hectormoncler • Azure LEMP Demo</footer>
+
+  <script>
+    // tiny animated background (points + lines)
+    const c=document.getElementById('bg'),x=c.getContext('2d'); let W,H,P=[];
+    function R(){W=c.width=innerWidth;H=c.height=innerHeight;P=[...Array(60)].map(()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.7,vy:(Math.random()-.5)*.7}))}
+    function D(){x.clearRect(0,0,W,H);x.fillStyle="#00f0ff";P.forEach(n=>{n.x+=n.vx;n.y+=n.vy;if(n.x<0||n.x>W)n.vx*=-1;if(n.y<0||n.y>H)n.vy*=-1;x.beginPath();x.arc(n.x,n.y,2,0,7);x.fill();});
+      for(let i=0;i<P.length;i++)for(let j=i+1;j<P.length;j++){const a=P[i],b=P[j],d=Math.hypot(a.x-b.x,a.y-b.y);if(d<120){x.strokeStyle=`rgba(0,240,255,${1-d/120})`;x.beginPath();x.moveTo(a.x,a.y);x.lineTo(b.x,b.y);x.stroke();}}
+      requestAnimationFrame(D)}
+    addEventListener('resize',R); R(); D();
+  </script>
+</body>
+</html>
+
+
+<?php
+// Handle GET request to display all contact messages
+require_once 'database_setup.php';
+
+try {
+    $stmt = $pdo->prepare("SELECT id, name, email, message, created_at FROM contacts ORDER BY created_at DESC");
+    $stmt->execute();
+    $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch(PDOException $e) {
+    $error = "Error retrieving messages: " . $e->getMessage();
+    $messages = [];
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Messages - Azure MySQL Contact App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📋 All Messages</h1>
+        </header>
+
+        <nav>
+            <a href="index.html" class="btn">Home</a>
+            <a href="contact_form.html" class="btn">Contact Form</a>
+            <a href="on_get_messages.php" class="btn active">View Messages</a>
+        </nav>
+
+        <main>
+            <?php if (isset($error)): ?>
+                <div class="error-message">
+                    <h2>❌ Error</h2>
+                    <p><?php echo htmlspecialchars($error); ?></p>
+                </div>
+            <?php elseif (empty($messages)): ?>
+                <div class="info-message">
+                    <h2>📭 No Messages Yet</h2>
+                    <p>No messages have been submitted yet.</p>
+                    <a href="contact_form.html" class="btn">Send First Message</a>
+                </div>
+            <?php else: ?>
+                <div class="messages-count">
+                    <p>Total messages: <strong><?php echo count($messages); ?></strong></p>
+                </div>
+
+                <div class="messages-list">
+                    <?php foreach ($messages as $message): ?>
+                        <div class="message-item">
+                            <div class="message-header">
+                                <h3><?php echo htmlspecialchars($message['name']); ?></h3>
+                                <span class="message-date"><?php echo htmlspecialchars($message['created_at']); ?></span>
+                            </div>
+                            <p class="message-email">📧 <?php echo htmlspecialchars($message['email']); ?></p>
+                            <div class="message-content">
+                                <p><?php echo nl2br(htmlspecialchars($message['message'])); ?></p>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+        </main>
+    </div>
+</body>
+</html>
